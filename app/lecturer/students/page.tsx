@@ -115,7 +115,7 @@ export default function LecturerStudentsPage() {
                               className="h-20 w-20 rounded-full"
                               style={{ objectFit: "cover" }}
                             />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">OOU</h1>
+              <h1 className="ml-2 text-2xl font-bold text-gray-900">TASUED</h1>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">

@@ -20,7 +20,7 @@ export function LecturerNavigation() {
   ]
 
   return (
-    <nav className="flex space-x-1 mb-8 bg-white p-1 rounded-lg border">
+    <nav className="flex flex-wrap space-x-1 mb-8 bg-white p-1 rounded-lg border">
       {navItems.map((item) => (
         <Link key={item.href} href={item.href}>
           <Button
