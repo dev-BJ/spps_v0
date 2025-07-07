@@ -56,7 +56,7 @@ export default function LoginPage() {
                             alt="OOU Logo"
                             width={500}
                             height={500}
-                            className="h-[200] w-[200] rounded-full"
+                            className="h-[150] w-[150] rounded-full"
                             style={{ objectFit: "cover" }}
                           />
           </div>
