@@ -76,13 +76,13 @@ export default function StudentDashboard() {
             <div className="flex items-center">
               {/* <BookOpen className="h-8 w-8 text-blue-600" /> */}
               <Image
-                                            src="/oou-logo.png"
-                                            alt="OOU Logo"
-                                            width={500}
-                                            height={500}
-                                            className="h-20 w-20 rounded-full"
-                                            style={{ objectFit: "cover" }}
-                                          />
+                  src="/oou-logo.png"
+                  alt="OOU Logo"
+                  width={500}
+                  height={500}
+                  className="h-15 w-15 rounded-full"
+                  style={{ objectFit: "cover" }}
+                />
               <h1 className="ml-2 text-2xl font-bold text-gray-900">TASUED</h1>
             </div>
             <div className="flex items-center space-x-4">
