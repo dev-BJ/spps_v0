@@ -40,7 +40,7 @@ export async function login(user_id: string, password: string ) {
   let user: User | null = null
 
   try{
-    user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+    user = await fetch(`${process.env.API_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
