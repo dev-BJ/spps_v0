@@ -39,7 +39,8 @@ export async function login(user_id: string, password: string ) {
   
   let user: User | null = null
 
-  user = await fetch('http://localhost:8000/api/login', {
+  try{
+    user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,6 +69,9 @@ export async function login(user_id: string, password: string ) {
       console.error("Login error:", error)
       return null
     })
+  }catch(e){
+    console.log("Login error", e)
+  }
 
     console.log(user)
 
