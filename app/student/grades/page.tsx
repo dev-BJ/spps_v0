@@ -15,6 +15,7 @@ import { SubjectBreakdown } from "@/components/subject-breakdown"
 import { AssignmentHistory } from "@/components/assignment-history"
 import { getUser, logout } from "@/lib/auth"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { PredictionDashboard } from "@/components/prediction-dashboard"
 import { AdvisoryDashboard } from "@/components/advisory-dashboard"
 
@@ -192,8 +193,16 @@ export default function StudentGradesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">EduPredict</h1>
+              {/* <BookOpen className="h-8 w-8 text-blue-600" /> */}
+              <Image
+                              src="/oou-logo.png"
+                              alt="OOU Logo"
+                              width={500}
+                              height={500}
+                              className="h-20 w-20 rounded-full"
+                              style={{ objectFit: "cover" }}
+                            />
+              <h1 className="ml-2 text-2xl font-bold text-gray-900">OOU</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm">

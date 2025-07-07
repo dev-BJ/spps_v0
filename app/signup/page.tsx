@@ -12,6 +12,7 @@ import { GraduationCap, User, BookOpen, AlertCircle, CheckCircle } from "lucide-
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signup } from "@/lib/auth"
+import { Image } from "@radix-ui/react-avatar"
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false)

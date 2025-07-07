@@ -11,6 +11,7 @@ import { GraduationCap, User, BookOpen, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { login } from "@/lib/auth"
+import Image from "next/image"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -49,9 +50,17 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <GraduationCap className="h-12 w-12 text-blue-600" />
+            {/* <GraduationCap className="h-12 w-12 text-blue-600" /> */}
+            <Image
+                            src="/oou-logo.png"
+                            alt="OOU Logo"
+                            width={500}
+                            height={500}
+                            className="h-[200] w-[200] rounded-full"
+                            style={{ objectFit: "cover" }}
+                          />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">EduPredict</h1>
+          {/* <h1 className="text-3xl font-bold text-gray-900">OOU</h1> */}
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
@@ -101,14 +110,14 @@ export default function LoginPage() {
                     {isLoading ? "Signing in..." : "Sign in"}
                   </Button>
                 </form>
-                <div className="mt-4 text-center">
+                {/* <div className="mt-4 text-center">
                   <p className="text-sm text-gray-600">
                     Don't have an account?{" "}
                     <Link href="/signup" className="text-blue-600 hover:underline">
                       Sign up
                     </Link>
                   </p>
-                </div>
+                </div> */}
               </TabsContent>
 
               {/* <TabsContent value="lecturer">
