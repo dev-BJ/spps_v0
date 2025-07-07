@@ -19,7 +19,7 @@ export default function LecturerDashboard() {
   const fetch_courses = useCallback(async ()=>{
     const currentUser = await getUser()
     const userId = currentUser?.userId
-    fetch(`http://localhost:8000/api/courses/${userId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${userId}`, {
       method: "GET",
     })
     .then(res => res.json())
