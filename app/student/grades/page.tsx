@@ -199,7 +199,7 @@ export default function StudentGradesPage() {
                 alt="OOU Logo"
                 width={500}
                 height={500}
-                className="h-15 w-15 rounded-full"
+                className="h-20 w-20 rounded-full"
                 style={{ objectFit: "cover" }}
               />
               <h1 className="ml-2 text-2xl font-bold text-gray-900">TASUED</h1>
