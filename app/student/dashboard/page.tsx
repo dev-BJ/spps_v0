@@ -10,6 +10,7 @@ import { BookOpen, Calendar, TrendingUp, Award, Bell, LogOut } from "lucide-reac
 import { StudentNavigation } from "@/components/student-navigation"
 import { getUser, logout } from "@/lib/auth"
 import { useRouter } from "next/navigation"
+import Image from 'next/image'
 
 export default function StudentDashboard() {
   const [user, setUser] = useState<any>(null)
@@ -73,8 +74,16 @@ export default function StudentDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">EduPredict</h1>
+              {/* <BookOpen className="h-8 w-8 text-blue-600" /> */}
+              <Image
+                                            src="/oou-logo.png"
+                                            alt="OOU Logo"
+                                            width={500}
+                                            height={500}
+                                            className="h-20 w-20 rounded-full"
+                                            style={{ objectFit: "cover" }}
+                                          />
+              <h1 className="ml-2 text-2xl font-bold text-gray-900">TASUED</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm">
