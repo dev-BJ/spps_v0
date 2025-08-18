@@ -49,7 +49,7 @@ export async function login(user_id: string, password: string ) {
   })
     .then((res) => res.json())
     .then((data) => {
-      if(data === 'undefined') return null
+      if(data.id === 'undefined') return null
 
       if (data.error) {
         console.log(data.error)
