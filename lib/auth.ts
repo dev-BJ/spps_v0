@@ -49,7 +49,7 @@ export async function login(user_id: string, password: string ) {
   })
     .then((res) => res.json())
     .then((data) => {
-      if(!data) return null
+      if(data.length === 0) return null
 
       if (data.error) {
         console.log(data.error)
@@ -78,7 +78,7 @@ export async function login(user_id: string, password: string ) {
 
     console.log(user)
 
-    if (!user) {
+  if (!user) {
     return { success: false, error: "Invalid credentials" }
   }
 
