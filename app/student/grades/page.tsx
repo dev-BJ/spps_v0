@@ -39,7 +39,7 @@ export default function StudentGradesPage() {
     }
     loadUser()
     fetch_advisory_data()
-  }, [router])
+  }, [])
 
   const fetch_advisory_data = useCallback(async () => {
     const currentUser = await getUser()
@@ -56,8 +56,8 @@ export default function StudentGradesPage() {
     const data = await response.json()
     console.log(data)
     setAdvisoryData(data)
-    return data
-  }, [router])
+    // return data
+  }, [setAdvisoryData])
 
   const handleLogout = async () => {
     await logout()

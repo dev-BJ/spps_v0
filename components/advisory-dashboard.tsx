@@ -43,10 +43,12 @@ export function AdvisoryDashboard({ advisory }: PredictionDashboardProps) {
   // Replace all escaped \n with real line breaks
   cleaned = cleaned.replace(/\\n/g, '\r\n');
   // Ensure a blank line before each numbered list item (e.g., 1., 2., etc.)
-  cleaned = cleaned.replace(/(\n)(\d+\.)/g, '\n\n$2');
+  cleaned = cleaned.replace(/(\n)(\d+\.)/g, '\r\n$2');
   // Trim leading/trailing whitespace
-  console.log("Cleaned Recommendation", cleaned)
-  return cleaned.trim();
+  // console.log("Cleaned Recommendation", cleaned.split('\r\n'))
+  return cleaned.split('\r\n')
+  // console.log("Recommendation", recommendation)
+  // Return the cleaned text
 }
 
   return (
@@ -76,7 +78,13 @@ export function AdvisoryDashboard({ advisory }: PredictionDashboardProps) {
                     }
                   }} />
                 </div>
-                <div className="w-1/2 p4">{cleanRecommendation(advisory?.response)}</div>
+                <div className="w-1/2 p4 text-center">
+                {
+                  cleanRecommendation(advisory?.response || "No results yet").map((item) => {
+                    return <p className='text-sm text-gray-800'>{item.trim()}</p>
+                  })
+                }
+                </div>
               </div>
           </div>
         </CardContent>

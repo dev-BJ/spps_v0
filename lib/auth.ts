@@ -79,7 +79,7 @@ export async function login(user_id: string, password: string ) {
     console.log(user)
 
   if (!user) {
-    return { success: false, error: "Invalid credentials" }
+    return { success: false, error: "Invalid credentials / Something went wrong" }
   }
 
     // Create session token (in a real app, use proper JWT or session management)

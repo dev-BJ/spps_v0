@@ -97,7 +97,7 @@ export default function LoginPage() {
                       id="user_id"
                       name="user_id"
                       type="text"
-                      placeholder="15H/0001/CS"
+                      placeholder="20210294061"
                       required
                       disabled={isLoading}
                     />
@@ -157,7 +157,7 @@ export default function LoginPage() {
                 <p>
                   <strong>Demo Credentials:</strong>
                 </p>
-                <p>Student: 15H/0001/CS / 1234567</p>
+                <p>Student: 20210294061 / 1234567</p>
                 <p>Lecturer: john.doe / 1234567</p>
               </div>
             </div>
