@@ -80,8 +80,8 @@ export function AdvisoryDashboard({ advisory }: PredictionDashboardProps) {
                 </div>
                 <div className="w-1/2 p4 text-center">
                 {
-                  cleanRecommendation(advisory?.response || "No results yet").map((item) => {
-                    return <p className='text-sm text-gray-800'>{item.trim()}</p>
+                  cleanRecommendation(advisory?.response || "No results yet").map((item: string, index: number) => {
+                    return <p className='text-sm text-gray-800' key={index}>{item.trim()}</p>
                   })
                 }
                 </div>

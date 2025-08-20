@@ -76,7 +76,7 @@ export async function login(user_id: string, password: string ) {
     console.log("Login error", e)
   }
 
-    console.log(user)
+    // console.log(user)
 
   if (!user) {
     return { success: false, error: "Invalid credentials / Something went wrong" }
