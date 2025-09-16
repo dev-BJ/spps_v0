@@ -44,7 +44,7 @@ export default function UploadResultsPage() {
       const currentUser = await getUser()
       const userId = currentUser?.userId
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${userId}`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/lecturer/${userId}`, {
         method: "GET",
       })
       .then(res => res.json())
@@ -257,7 +257,7 @@ export default function UploadResultsPage() {
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{lecturerClasses.length}</div>
+                <div className="text-2xl font-bold">{courses.length}</div>
                 <p className="text-xs text-muted-foreground">Active classes</p>
               </CardContent>
             </Card>
@@ -268,7 +268,7 @@ export default function UploadResultsPage() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{lecturerClasses.reduce((sum, cls) => sum + cls.students, 0)}</div>
+                <div className="text-2xl font-bold">{courses.reduce((total, course) => total + course.student_count, 0)}</div>
                 <p className="text-xs text-muted-foreground">Across all classes</p>
               </CardContent>
             </Card>
@@ -340,9 +340,9 @@ export default function UploadResultsPage() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="individual">Individual Entry</TabsTrigger>
+              {/* <TabsTrigger value="individual">Individual Entry</TabsTrigger> */}
               <TabsTrigger value="bulk">Bulk Upload</TabsTrigger>
-              <TabsTrigger value="exam">Exam Results</TabsTrigger>
+              {/* <TabsTrigger value="exam">Exam Results</TabsTrigger> */}
               <TabsTrigger value="preview">Preview & Validate</TabsTrigger>
             </TabsList>
 

@@ -11,8 +11,8 @@ export function StudentNavigation() {
   const navItems = [
     { href: "/student/dashboard", label: "Dashboard", icon: <TrendingUp className="h-4 w-4" /> },
     { href: "/student/grades", label: "Grades", icon: <BookOpen className="h-4 w-4" /> },
-    { href: "/student/schedule", label: "Schedule", icon: <Calendar className="h-4 w-4" /> },
-    { href: "/student/assignments", label: "Assignments", icon: <FileText className="h-4 w-4" /> },
+    // { href: "/student/schedule", label: "Schedule", icon: <Calendar className="h-4 w-4" /> },
+    // { href: "/student/assignments", label: "Assignments", icon: <FileText className="h-4 w-4" /> },
     { href: "/student/profile", label: "Profile", icon: <User className="h-4 w-4" /> },
   ]
 

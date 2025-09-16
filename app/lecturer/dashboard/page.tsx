@@ -20,7 +20,7 @@ export default function LecturerDashboard() {
   const fetch_courses = useCallback(async ()=>{
     const currentUser = await getUser()
     const userId = currentUser?.userId
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${userId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/lecturer/${userId}`, {
       method: "GET",
     })
     .then(res => res.json())
@@ -139,20 +139,20 @@ export default function LecturerDashboard() {
 
           <LecturerNavigation />
 
-          {/* Overview Cards */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+          {/* Overview Cards sm:grid-cols-2 lg:grid-cols-4 */}
+          <div className="grid grid-cols-1 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Students</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{lecturerData.totalStudents}</div>
+                <div className="text-2xl font-bold">{courses.reduce((total, course) => total + course.student_count, 0)}</div>
                 <p className="text-xs text-muted-foreground">Across all classes</p>
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Average GPA</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -161,9 +161,9 @@ export default function LecturerDashboard() {
                 <div className="text-2xl font-bold">{lecturerData.averageGPA}</div>
                 <p className="text-xs text-muted-foreground">+0.2 from last month</p>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">At-Risk Students</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-muted-foreground" />
@@ -172,9 +172,9 @@ export default function LecturerDashboard() {
                 <div className="text-2xl font-bold">{lecturerData.atRiskStudents}</div>
                 <p className="text-xs text-muted-foreground">Need attention</p>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Today's Classes</CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -183,11 +183,11 @@ export default function LecturerDashboard() {
                 <div className="text-2xl font-bold">{lecturerData.upcomingClasses}</div>
                 <p className="text-xs text-muted-foreground">Scheduled for today</p>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-8">
-            {/* My Classes */}
+          <div className="grid grid-cols-1 gap-6 mb-8">
+            {/* My Classes lg:grid-cols-2 */}
             <Card>
               <CardHeader>
                 <CardTitle>My Classes</CardTitle>
@@ -198,15 +198,17 @@ export default function LecturerDashboard() {
                   <div key={classItem.id || index} className="flex justify-between items-center p-3 border rounded-lg">
                     <div>
                       <p className="font-medium">{classItem.name || classItem.course_code}</p>
-                      {/* <p className="text-sm text-muted-foreground">
-                        {classItem.students} students • Avg: {classItem.avgGrade}
-                      </p> */}
+                      <p className="text-sm text-muted-foreground">
+                        {/* {classItem.students} students • Avg: {classItem.avgGrade} */}
+                        {classItem.course_title}
+                      </p>
                     </div>
                     <div className="text-right">
-                      {/* <p className="text-sm font-medium">{classItem.nextClass}</p> */}
-                      <Button variant="outline" size="sm" className="mt-1 bg-transparent">
+                      <p className="text-sm font-medium">{classItem.course_unit || 0} units</p>
+                      {/* <Button variant="outline" size="sm" className="mt-1 bg-transparent">
                         View Class
-                      </Button>
+                      </Button> */}
+                      {classItem.student_count || 0} students
                     </div>
                   </div>
                 ))}
@@ -214,7 +216,7 @@ export default function LecturerDashboard() {
             </Card>
 
             {/* Pending Tasks */}
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Pending Tasks</CardTitle>
                 <CardDescription>Items that need your attention</CardDescription>
@@ -242,11 +244,11 @@ export default function LecturerDashboard() {
                   </div>
                 ))}
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           {/* Recent Activity */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
               <CardDescription>Your latest actions and updates</CardDescription>
@@ -276,10 +278,10 @@ export default function LecturerDashboard() {
                 ))}
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Quick Actions */}
-          <Card className="mt-8">
+          {/* <Card className="mt-8">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Common tasks and shortcuts</CardDescription>
@@ -295,7 +297,7 @@ export default function LecturerDashboard() {
               <Button variant="outline">Schedule Class</Button>
               <Button variant="outline">Generate Reports</Button>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>

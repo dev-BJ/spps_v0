@@ -20,7 +20,7 @@ interface BulkUploadInterfaceProps {
 }
 
 export function BulkUploadInterface({ classes, onResultsUpload }: BulkUploadInterfaceProps) {
-  const [selectedClass, setSelectedClass] = useState("")
+  const [selectedClass, setSelectedClass] = useState({course_code: "", course_unit: ""})
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -97,12 +97,13 @@ export function BulkUploadInterface({ classes, onResultsUpload }: BulkUploadInte
 
       // Transform and validate data
       const transformedResult: any = {
-        course_code: String(selectedClass),
+        course_code: String(selectedClass.course_code),
         lecturer_id: String(userId),
         student_id: String(result.studentid || result.student_id || result.id),
         semester: String(result.semester),
         session: String(result.session),
-        course_unit: Number.parseInt(result.course_unit || result.courseUnit || result.courseunit),
+        // course_unit: Number.parseInt(result.course_unit || result.courseUnit || result.courseunit),
+        course_unit: Number.parseInt(selectedClass.course_unit),
         ca_score: Number.parseInt(result.ca_score || result.caScore || result.cascore),
         exam_score: Number.parseInt(result.exam_score || result.examScore || result.examscore) || 0,
         total_score: Number.parseInt(result.totalscore || result.total_score || result.totalScore) || 100,
@@ -176,14 +177,19 @@ export function BulkUploadInterface({ classes, onResultsUpload }: BulkUploadInte
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="class">Class *</Label>
-              <Select value={selectedClass} onValueChange={setSelectedClass}>
+              <Select value={selectedClass.course_code} onValueChange={
+                (value) => {
+                  const cls = classes.find((c) => c.course_code === value)
+                  setSelectedClass(cls || {course_code: "", course_unit: ""})
+                }
+              }>
                 <SelectTrigger>
                   <SelectValue placeholder="Select class" />
                 </SelectTrigger>
                 <SelectContent>
                   {classes.map((cls) => (
                     <SelectItem key={cls.id} value={cls.course_code}>
-                      {cls.course_title} (30 students)
+                      {cls.course_title}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -295,7 +301,7 @@ export function BulkUploadInterface({ classes, onResultsUpload }: BulkUploadInte
                   • <strong>Session</strong> 
                 </li>
                 <li>
-                  • <strong>Course Unit</strong> 
+                  {/* • <strong>Course Unit</strong>  */}
                 </li>
                 <li>
                   • <strong>CA Score</strong> 

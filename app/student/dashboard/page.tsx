@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -16,6 +16,18 @@ export default function StudentDashboard() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const [currentGPA, setCurrentGPA] = useState<{current_gpa: number} | null>(null)
+  interface Course {
+    course_code: string;
+    course_title: string;
+    course_unit: number;
+    first_name: string;
+    last_name: string;
+    total_score: number;
+    letter_grade: string;
+  }
+  const [courses, setCourses] = useState<Course[]>([])
+  let requestSent = false;
 
   useEffect(() => {
     const loadUser = async () => {
@@ -27,8 +39,51 @@ export default function StudentDashboard() {
       setUser(currentUser)
       setLoading(false)
     }
-    loadUser()
+    if (!requestSent) {
+      requestSent = true;
+      loadUser()
+      fetch_current_gpa()
+      fetch_courses()
+    }
   }, [router])
+
+  const fetch_current_gpa = useCallback(async () => {
+      // localStorage.removeItem("current_gpa")
+      const currentUser = await getUser()
+      const userId = currentUser?.userId
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/current_gpa`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "user_id": userId
+        })
+      })
+      const data = await response.json();
+      // console.log(data)
+      setCurrentGPA(data)
+      // localStorage.setItem("current_gpa", JSON.stringify(data))
+      // return data
+    }, [])
+
+  const fetch_courses = useCallback(async () => {
+      // localStorage.removeItem("current_gpa")
+      const currentUser = await getUser()
+      const userId = currentUser?.userId
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/student/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        // body: JSON.stringify({
+        //   "user_id": userId
+        // })
+      })
+      const data = await response.json();
+      // console.log(data)
+      setCourses(data.courses)
+    }, [])
 
   const handleLogout = async () => {
     await logout()
@@ -118,20 +173,22 @@ export default function StudentDashboard() {
 
           <StudentNavigation />
 
-          {/* Academic Overview Cards */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+          {/* Academic Overview Cards lg:grid-cols-4 */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Current GPA</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{studentData.currentGPA}</div>
-                <p className="text-xs text-muted-foreground">Predicted: {studentData.predictedGPA}</p>
+                <div className="text-2xl font-bold">
+                  {currentGPA !== null ? currentGPA?.current_gpa.toFixed(2) : 0.00}
+                </div>
+                {/* <p className="text-xs text-muted-foreground">Predicted: {studentData.predictedGPA}</p> */}
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Attendance</CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -140,9 +197,9 @@ export default function StudentDashboard() {
                 <div className="text-2xl font-bold">{studentData.attendance}%</div>
                 <Progress value={studentData.attendance} className="h-2 mt-2" />
               </CardContent>
-            </Card>
+            </Card> */}
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Assignments</CardTitle>
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
@@ -153,7 +210,7 @@ export default function StudentDashboard() {
                 </div>
                 <p className="text-xs text-muted-foreground">{studentData.assignments.overdue} overdue</p>
               </CardContent>
-            </Card>
+            </Card> */}
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -161,21 +218,21 @@ export default function StudentDashboard() {
                 <Award className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">Grade {user?.grade}</div>
-                <p className="text-xs text-muted-foreground">Academic Year 2024</p>
+                <div className="text-2xl font-bold">{user?.grade || 400} Level</div>
+                {/* <p className="text-xs text-muted-foreground">Academic Year 2025</p> */}
               </CardContent>
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-8">
-            {/* Subject Progress */}
+          <div className="grid grid-cols-1 gap-6 mb-8">
+            {/* Subject Progress lg:grid-cols-2*/}
             <Card>
               <CardHeader>
-                <CardTitle>Subject Progress</CardTitle>
-                <CardDescription>Your current performance across all subjects</CardDescription>
+                <CardTitle>Enrolled Courses</CardTitle>
+                {/* <CardDescription>Your current performance across all subjects</CardDescription> */}
               </CardHeader>
               <CardContent className="space-y-4">
-                {studentData.subjects.map((subject, index) => (
+                {/* {studentData.subjects.map((subject, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{subject.name}</span>
@@ -184,12 +241,27 @@ export default function StudentDashboard() {
                     <Progress value={subject.progress} className="h-2" />
                     <p className="text-xs text-muted-foreground">{subject.progress}% complete</p>
                   </div>
-                ))}
+                ))} */}
+                {
+                  courses.length === 0 ? (
+                    <p className="text-sm text-gray-500">No courses enrolled yet.</p>
+                  ) : (
+                    courses.map((course, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{course.course_title} ({course.course_code})</span>
+                          <Badge variant="outline">{course.course_unit} Units</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Lecturer: {course.first_name} {course.last_name}</p>
+                      </div>
+                    ))
+                  )
+                }
               </CardContent>
             </Card>
 
             {/* Upcoming Assignments */}
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Upcoming Assignments</CardTitle>
                 <CardDescription>Don't forget these important deadlines</CardDescription>
@@ -219,11 +291,11 @@ export default function StudentDashboard() {
                   </div>
                 ))}
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           {/* Recent Grades */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Recent Grades</CardTitle>
               <CardDescription>Your latest assignment results</CardDescription>
@@ -246,7 +318,7 @@ export default function StudentDashboard() {
                 ))}
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>

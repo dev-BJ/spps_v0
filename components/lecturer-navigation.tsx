@@ -11,12 +11,12 @@ export function LecturerNavigation() {
   const navItems = [
     { href: "/lecturer/dashboard", label: "Dashboard", icon: <TrendingUp className="h-4 w-4" /> },
     { href: "/lecturer/students", label: "Students", icon: <Users className="h-4 w-4" /> },
-    { href: "/lecturer/analytics", label: "Analytics", icon: <TrendingUp className="h-4 w-4" /> },
+    // { href: "/lecturer/analytics", label: "Analytics", icon: <TrendingUp className="h-4 w-4" /> },
     // { href: "/lecturer/advisory", label: "Advisory", icon: <TrendingUp className="h-4 w-4" /> },
-    { href: "/lecturer/classes", label: "Classes", icon: <BookOpen className="h-4 w-4" /> },
+    // { href: "/lecturer/classes", label: "Classes", icon: <BookOpen className="h-4 w-4" /> },
     { href: "/lecturer/upload-results", label: "Upload Results", icon: <Upload className="h-4 w-4" /> },
-    { href: "/lecturer/schedule", label: "Schedule", icon: <Calendar className="h-4 w-4" /> },
-    { href: "/lecturer/settings", label: "Settings", icon: <Settings className="h-4 w-4" /> },
+    // { href: "/lecturer/schedule", label: "Schedule", icon: <Calendar className="h-4 w-4" /> },
+    // { href: "/lecturer/settings", label: "Settings", icon: <Settings className="h-4 w-4" /> },
   ]
 
   return (

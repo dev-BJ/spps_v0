@@ -25,7 +25,19 @@ export default function StudentGradesPage() {
   const [advisoryData, setAdvisoryData] = useState<any>(null)
   const [selectedSemester, setSelectedSemester] = useState("current")
   const [selectedSubject, setSelectedSubject] = useState("all")
+  const [currentGPA, setCurrentGPA] = useState<{current_gpa: number} | null>(null)
+  interface Course {
+    course_code: string;
+    course_title: string;
+    course_unit: number;
+    first_name: string;
+    last_name: string;
+    total_score: number;
+    letter_grade: string;
+  }
+  const [courses, setCourses] = useState<Course[]>([])
   const router = useRouter()
+  let requestSent: boolean = false;
 
   useEffect(() => {
     const loadUser = async () => {
@@ -37,8 +49,13 @@ export default function StudentGradesPage() {
       setUser(currentUser)
       setLoading(false)
     }
-    loadUser()
-    fetch_advisory_data()
+    if (!requestSent) {
+      requestSent = true;
+      loadUser()
+      fetch_current_gpa()
+      fetch_advisory_data()
+      fetch_courses()
+    }
   }, [])
 
   const fetch_advisory_data = useCallback(async () => {
@@ -53,11 +70,47 @@ export default function StudentGradesPage() {
         "user_id": userId
       })
     })
-    const data = await response.json()
-    console.log(data)
+    const data = await response.json();
+    // console.log(data)
     setAdvisoryData(data)
     // return data
-  }, [setAdvisoryData])
+  }, [])
+
+  const fetch_current_gpa = useCallback(async () => {
+    const currentUser = await getUser()
+    const userId = currentUser?.userId
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/current_gpa`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "user_id": userId
+      })
+    })
+    const data = await response.json();
+    // console.log(data)
+    setCurrentGPA(data)
+    // return data
+  }, [])
+
+  const fetch_courses = useCallback(async () => {
+      // localStorage.removeItem("current_gpa")
+      const currentUser = await getUser()
+      const userId = currentUser?.userId
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/student/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        // body: JSON.stringify({
+        //   "user_id": userId
+        // })
+      })
+      const data = await response.json();
+      // console.log(data)
+      setCourses(data.courses)
+    }, [])
 
   const handleLogout = async () => {
     await logout()
@@ -184,8 +237,13 @@ export default function StudentGradesPage() {
 
   const filteredSubjects =
     selectedSubject === "all"
-      ? gradeData.subjects
-      : gradeData.subjects.filter((subject) => subject.id === selectedSubject)
+      ? courses
+      : courses.filter((subject) => subject.course_title === selectedSubject)
+
+  // const filteredSubjects =
+  //   selectedSubject === "all"
+  //     ? gradeData.subjects
+  //     : gradeData.subjects.filter((subject) => subject.id === selectedSubject)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -249,20 +307,22 @@ export default function StudentGradesPage() {
 
           <StudentNavigation />
 
-          {/* Academic Summary Cards */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+          {/* Academic Summary Cards lg:grid-cols-4 */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Current GPA</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{gradeData.currentGPA}</div>
-                <p className="text-xs text-muted-foreground">Cumulative: {gradeData.cumulativeGPA}</p>
+                <div className="text-2xl font-bold">
+                  {currentGPA !== null ? currentGPA?.current_gpa.toFixed(2) : 0.00}
+                </div>
+                {/* <p className="text-xs text-muted-foreground">Cumulative: {gradeData.cumulativeGPA}</p> */}
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Class Rank</CardTitle>
                 <Award className="h-4 w-4 text-muted-foreground" />
@@ -271,9 +331,9 @@ export default function StudentGradesPage() {
                 <div className="text-2xl font-bold">#{gradeData.classRank}</div>
                 <p className="text-xs text-muted-foreground">of {gradeData.totalStudents} students</p>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Credits Earned</CardTitle>
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
@@ -283,7 +343,7 @@ export default function StudentGradesPage() {
                 <Progress value={(gradeData.creditsEarned / gradeData.creditsRequired) * 100} className="h-2 mt-2" />
                 <p className="text-xs text-muted-foreground mt-1">of {gradeData.creditsRequired} required</p>
               </CardContent>
-            </Card>
+            </Card> */}
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -291,15 +351,15 @@ export default function StudentGradesPage() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">Grade {user?.grade}</div>
-                <p className="text-xs text-muted-foreground">Spring 2024</p>
+                <div className="text-2xl font-bold">{user?.grade || 400} Level</div>
+                {/* <p className="text-xs text-muted-foreground">Spring 2024</p> */}
               </CardContent>
             </Card>
           </div>
 
           {/* Filters */}
           <div className="flex gap-4 mb-6">
-            <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+            {/* <Select value={selectedSemester} onValueChange={setSelectedSemester}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="Select semester" />
               </SelectTrigger>
@@ -308,19 +368,33 @@ export default function StudentGradesPage() {
                 <SelectItem value="fall2023">Fall 2023</SelectItem>
                 <SelectItem value="spring2024">Spring 2024</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
 
             <Select value={selectedSubject} onValueChange={setSelectedSubject}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="Select subject" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Subjects</SelectItem>
+                {/* <SelectItem value="all">All Subjects</SelectItem>
                 <SelectItem value="math">Mathematics</SelectItem>
                 <SelectItem value="english">English Literature</SelectItem>
                 <SelectItem value="science">Biology</SelectItem>
                 <SelectItem value="history">World History</SelectItem>
-                <SelectItem value="art">Visual Arts</SelectItem>
+                <SelectItem value="art">Visual Arts</SelectItem> */}
+                {
+                  courses.length > 0 ? (
+                    <>
+                      <SelectItem value="all">All Subjects</SelectItem>
+                      {courses.map((course) => (
+                        <SelectItem key={course.course_code} value={course.course_title}>
+                          {course.course_title}
+                        </SelectItem>
+                      ))}
+                    </>
+                  ) : (
+                    <SelectItem value="all">No Subjects Available</SelectItem>
+                  )
+                }
               </SelectContent>
             </Select>
           </div>
@@ -328,9 +402,9 @@ export default function StudentGradesPage() {
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="subjects">By Subject</TabsTrigger>
-              <TabsTrigger value="assignments">Assignments</TabsTrigger>
-              <TabsTrigger value="trends">Trends</TabsTrigger>
+              {/* <TabsTrigger value="subjects">By Subject</TabsTrigger> */}
+              {/* <TabsTrigger value="assignments">Assignments</TabsTrigger> */}
+              {/* <TabsTrigger value="trends">Trends</TabsTrigger> */}
               <TabsTrigger value="advisory">Advisory</TabsTrigger>
               {/* <TabsTrigger value="predictions">AI Predictions</TabsTrigger> */}
             </TabsList>
@@ -344,42 +418,42 @@ export default function StudentGradesPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {filteredSubjects.map((subject) => (
-                      <div key={subject.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    {filteredSubjects.map((subject, index) => (
+                      <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex items-center space-x-4">
                           <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                             <BookOpen className="h-6 w-6 text-blue-600" />
                           </div>
                           <div>
-                            <h3 className="font-semibold">{subject.name}</h3>
-                            <p className="text-sm text-muted-foreground">{subject.teacher}</p>
-                            <p className="text-xs text-muted-foreground">{subject.credits} credits</p>
+                            <h3 className="font-semibold">{subject.course_title} ({subject.course_code})</h3>
+                            <p className="text-sm text-muted-foreground">{subject.first_name + " " + subject.last_name}</p>
+                            <p className="text-xs text-muted-foreground">{subject.course_unit} units</p>
                           </div>
                         </div>
 
                         <div className="flex items-center space-x-6">
                           <div className="text-center">
                             <p className="text-sm font-medium">Current Grade</p>
-                            <Badge variant={getGradeBadgeVariant(subject.currentGrade)} className="text-lg font-bold">
-                              {subject.currentGrade}
+                            <Badge variant={getGradeBadgeVariant(subject.letter_grade)} className="text-lg font-bold">
+                              {subject.letter_grade}
                             </Badge>
                           </div>
                           <div className="text-center">
                             <p className="text-sm font-medium">Percentage</p>
-                            <p className={`text-lg font-bold ${getGradeColor(subject.percentage)}`}>
-                              {subject.percentage}%
+                            <p className={`text-lg font-bold ${getGradeColor(subject.total_score)}`}>
+                              {subject.total_score}%
                             </p>
                           </div>
-                          <div className="text-center">
+                          {/* <div className="text-center">
                             <p className="text-sm font-medium">Attendance</p>
                             <p className="text-lg font-bold">{subject.attendance}%</p>
-                          </div>
-                          <div className="text-center">
+                          </div> */}
+                          {/* <div className="text-center">
                             <p className="text-sm font-medium">Trend</p>
                             {subject.trend === "up" && <TrendingUp className="h-5 w-5 text-green-500 mx-auto" />}
                             {subject.trend === "down" && <TrendingDown className="h-5 w-5 text-red-500 mx-auto" />}
                             {subject.trend === "stable" && <div className="h-5 w-5 bg-gray-300 rounded-full mx-auto" />}
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     ))}
@@ -388,7 +462,7 @@ export default function StudentGradesPage() {
               </Card>
 
               {/* Upcoming Assignments */}
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <CardTitle>Upcoming Major Assignments</CardTitle>
                   <CardDescription>Important assignments and exams coming up</CardDescription>
@@ -409,16 +483,16 @@ export default function StudentGradesPage() {
                     ))}
                   </div>
                 </CardContent>
-              </Card>
+              </Card> */}
             </TabsContent>
 
-            <TabsContent value="subjects" className="space-y-6">
+            {/* <TabsContent value="subjects" className="space-y-6">
               <SubjectBreakdown subjects={filteredSubjects} />
-            </TabsContent>
+            </TabsContent> */}
 
-            <TabsContent value="assignments" className="space-y-6">
+            {/* <TabsContent value="assignments" className="space-y-6">
               <AssignmentHistory subjects={filteredSubjects} />
-            </TabsContent>
+            </TabsContent> */}
 
             <TabsContent value="trends" className="space-y-6">
               <GradeChart subjects={gradeData.subjects} semesterHistory={gradeData.semesterHistory} />

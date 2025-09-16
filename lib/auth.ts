@@ -30,9 +30,11 @@ export interface User {
   role: "student" | "lecturer"
   firstName: string
   lastName: string
-  grade?: string
+  // grade?: string
   userId: string
   department?: string
+  gender?: string
+  date_of_birth?: string
 }
 
 export async function login(user_id: string, password: string ) {
@@ -65,6 +67,8 @@ export async function login(user_id: string, password: string ) {
         userId: data.user_id,
         // grade: data.grade, // Optional for students
         department: data.department, // Optional for lecturers
+        gender: data.gender,
+        date_of_birth: data.date_of_birth,
       }
       
     })
@@ -93,6 +97,8 @@ export async function login(user_id: string, password: string ) {
       lastName: user.lastName,
       // grade: user.grade,
       department: user.department,
+      gender: user.gender,
+      date_of_birth: user.date_of_birth,
     }),
   )
 

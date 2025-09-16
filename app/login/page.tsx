@@ -158,7 +158,7 @@ export default function LoginPage() {
                   <strong>Demo Credentials:</strong>
                 </p>
                 <p>Student: 20210294061 / 1234567</p>
-                <p>Lecturer: john.doe / 1234567</p>
+                <p>Lecturer: abimbola.bl / 1234567</p>
               </div>
             </div>
           </CardContent>
